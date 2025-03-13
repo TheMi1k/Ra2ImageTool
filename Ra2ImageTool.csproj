@@ -93,11 +93,22 @@
     <Compile Include="AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PlayerColorEditWindow.xaml.cs">
+      <DependentUpon>PlayerColorEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CreatePaletteViewWindow.xaml.cs">
+      <DependentUpon>CreatePaletteViewWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Ra2PaletteColor.cs" />
     <Compile Include="Data\GData.cs" />
     <Compile Include="Funcs\ImageListManage.cs" />
+    <Compile Include="Funcs\ImageTypeConvert.cs" />
+    <Compile Include="Funcs\ProjectManage.cs" />
     <Compile Include="ListInsertWindow.xaml.cs">
       <DependentUpon>ListInsertWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\PaletteConfigModel.cs" />
+    <Compile Include="Models\ProjectModel.cs" />
     <Compile Include="Models\UIDataModel.cs" />
     <Compile Include="Funcs\GetPath.cs" />
     <Compile Include="Funcs\ImageManage.cs" />
@@ -107,6 +118,14 @@
     </Compile>
     <Compile Include="Funcs\Win32Funcs.cs" />
     <Page Include="AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PlayerColorEditWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreatePaletteViewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

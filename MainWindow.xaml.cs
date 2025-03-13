@@ -11,17 +11,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using Ra2ImageTool.Data;
 using Ra2ImageTool.Funcs;
 using Ra2ImageTool.Models;
 using Color = System.Drawing.Color;
-using DataFormats = System.Windows.DataFormats;
-using DataGrid = System.Windows.Controls.DataGrid;
-using DragEventArgs = System.Windows.DragEventArgs;
-using MessageBox = System.Windows.MessageBox;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Ra2ImageTool
 {
@@ -30,8 +26,6 @@ namespace Ra2ImageTool
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Color _palBackgroundColor;
-
         public MainWindow()
         {
             InitializeComponent();
@@ -56,13 +50,13 @@ namespace Ra2ImageTool
             {
                 if (GData.UIData.OverlayMode == GData.OverlayMode.叠加在上)
                 {
-                    System.Windows.Controls.Panel.SetZIndex(Grid_OutImg, 0);
-                    System.Windows.Controls.Panel.SetZIndex(Grid_OutImgOverlay, 1);
+                    Panel.SetZIndex(Grid_OutImg, 0);
+                    Panel.SetZIndex(Grid_OutImgOverlay, 1);
                 }
                 else
                 {
-                    System.Windows.Controls.Panel.SetZIndex(Grid_OutImg, 1);
-                    System.Windows.Controls.Panel.SetZIndex(Grid_OutImgOverlay, 0);
+                    Panel.SetZIndex(Grid_OutImg, 1);
+                    Panel.SetZIndex(Grid_OutImgOverlay, 0);
                 }
 
                 if (GData.ListViewData.Count == 0)
@@ -73,8 +67,8 @@ namespace Ra2ImageTool
                 GData.ListViewData[GData.UIData.NowIndex].OverlayMode = GData.UIData.OverlayMode;
             };
 
-            Button_SetPalBackground.Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(252, 0, 252));
-            _palBackgroundColor = Color.FromArgb(255, 252, 0, 252);
+            (StackPanel_PaletteHeaderColor.Children[0] as Button).Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb(0, 0, 252));
+            GData.PaletteConfig.PaletteHeaderColor[0] = Ra2PaletteColor.FromArgb(255, 0, 0, 252);
 
             ComboBox_CreatePalMode.ItemsSource = Enum.GetValues(typeof(GData.CreatePalMode));
             ComboBox_CreatePalMode.SelectedIndex = 0;
@@ -89,18 +83,25 @@ namespace Ra2ImageTool
 
         }
 
-
-        private void SelectColor_Click(object sender, RoutedEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            ColorDialog colorDialog = new ColorDialog();
+            base.OnClosing(e);
+
+            if (!ShowMessageBox("请确定当前项目是否已经保存\n是否退出？", MessageBoxButton.YesNo))
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void SelectViewBackgroundColor_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.ColorDialog colorDialog = new System.Windows.Forms.ColorDialog();
             if (colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 Color selectedColor = colorDialog.Color;
 
-                System.Windows.Media.Color wpfColor = System.Windows.Media.Color.FromArgb(selectedColor.A, selectedColor.R, selectedColor.G, selectedColor.B);
-
-                Border_InImg.Background = new SolidColorBrush(wpfColor);
-                Border_OutImg.Background = new SolidColorBrush(wpfColor);
+                Border_InImg.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(selectedColor.A, selectedColor.R, selectedColor.G, selectedColor.B));
+                Border_OutImg.Background = new SolidColorBrush(System.Windows.Media.Color.FromArgb(selectedColor.A, selectedColor.R, selectedColor.G, selectedColor.B));
             }
         }
 
@@ -587,8 +588,8 @@ namespace Ra2ImageTool
 
             StackPanel_Tips.Visibility = Visibility.Collapsed;
 
-            string[] files = { @"C:\Users\Milk\Desktop\pi.png", @"C:\Users\Milk\Desktop\pi.png" };
-            string[] fileso = { @"C:\Users\Milk\Desktop\00000.png", @"C:\Users\Milk\Desktop\00000.png" };
+            string[] files = { @"C:\Users\Milk\Desktop\pi.png", @"C:\Users\Milk\Desktop\background.png", @"C:\Users\Milk\Desktop\A040001.png" };
+            string[] fileso = { @"C:\Users\Milk\Desktop\00000.png", @"C:\Users\Milk\Desktop\测试图 - 副本.png" };
 
             try
             {
@@ -714,6 +715,28 @@ namespace Ra2ImageTool
                     throw new Exception("色盘颜色数量只能为2-256");
                 }
 
+                if (GData.ListViewData.Count == 0)
+                {
+                    return;
+                }
+
+                Grid_Main.IsEnabled = false;
+
+                bool isPlayerColor = (bool)CheckBox_PlayerColor.IsChecked;
+
+                List<Ra2PaletteColor> palette = await ImageManage.CreatePalette(palColorNum, GData.PaletteConfig.PaletteHeaderColor, isPlayerColor ? GData.PaletteConfig.PalettePlayerColor : null, ComboBox_CreatePalMode.SelectedItem.ToString());
+
+                CreatePaletteViewWindow window = new CreatePaletteViewWindow(palette);
+                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                window.Owner = this;
+                window.ShowDialog();
+
+                if (!window.Result)
+                {
+                    Grid_Main.IsEnabled = true;
+                    return;
+                }
+
                 if (!Directory.Exists($@"{GetPath.GetExportPalPath()}"))
                 {
                     Directory.CreateDirectory($@"{GetPath.GetExportPalPath()}");
@@ -724,16 +747,6 @@ namespace Ra2ImageTool
                 {
                     Directory.CreateDirectory($@"{GetPath.GetExportPalPath()}\{timeStr}");
                 }
-
-                if (GData.ListViewData.Count == 0)
-                {
-                    return;
-                }
-
-                Grid_Main.IsEnabled = false;
-
-                List<Color> palette = await ImageManage.CreatePalette(palColorNum, _palBackgroundColor, ComboBox_CreatePalMode.SelectedItem.ToString());
-
                 using (BinaryWriter writer = new BinaryWriter(File.Open($@"{GetPath.GetExportPalPath()}\{timeStr}\色盘.pal", FileMode.Create)))
                 {
                     foreach (var color in palette)
@@ -754,21 +767,6 @@ namespace Ra2ImageTool
             }
 
             Grid_Main.IsEnabled = true;
-        }
-
-        private void Button_SetPalBackground_Click(object sender, RoutedEventArgs e)
-        {
-            ColorDialog colorDialog = new ColorDialog();
-            if (colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                Color selectedColor = colorDialog.Color;
-
-                System.Windows.Media.Color wpfColor = System.Windows.Media.Color.FromArgb(selectedColor.A, selectedColor.R, selectedColor.G, selectedColor.B);
-
-                Button_SetPalBackground.Background = new SolidColorBrush(wpfColor);
-
-                _palBackgroundColor = selectedColor;
-            }
         }
 
         private bool ShowMessageBox(string text, MessageBoxButton type = MessageBoxButton.OK)
@@ -944,11 +942,6 @@ namespace Ra2ImageTool
             string newText = textBox.Text.Insert(textBox.SelectionStart, e.Text);
 
             e.Handled = !Regex.IsMatch(newText, @"^-?\d*$");
-        }
-
-        private void Button_ShowCreatePalModeTip_Click(object sender, RoutedEventArgs e)
-        {
-            ShowMessageBox(GData.CreatePalTips);
         }
 
         private int _insertIndex = -1;
@@ -1220,16 +1213,6 @@ namespace Ra2ImageTool
             this.Close();
         }
 
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            base.OnClosing(e);
-
-            if (!ShowMessageBox("请确定当前项目是否已经保存\n是否退出？", MessageBoxButton.YesNo))
-            {
-                e.Cancel = true;
-            }
-        }
-
         private void MenuItem_About_Click(object sender, RoutedEventArgs e)
         {
             var window = new AboutWindow();
@@ -1285,6 +1268,99 @@ namespace Ra2ImageTool
             {
                 ShowMessageBox(ex.Message);
             }
+        }
+
+        private void Button_EditPlayerColor_Click(object sender, RoutedEventArgs e)
+        {
+            if (GData.ListViewData.Count == 0)
+            {
+                return;
+            }
+
+            if (GData.ListViewData[GData.UIData.NowIndex].OutImg == null && GData.ListViewData[GData.UIData.NowIndex].ImgOverlay == null)
+            {
+                return;
+            }
+
+            var window = new PlayerColorEditWindow(GData.UIData.NowIndex);
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            window.Owner = this;
+            window.ShowDialog();
+        }
+
+        private void StackPanel_PaletteColorNum_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Border_PaletteTip.Visibility = Visibility.Visible;
+        }
+
+        private void StackPanel_PaletteColorNum_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Border_PaletteTip.Visibility = Visibility.Collapsed;
+        }
+
+        private void ArtTranslucency_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Border_ArtTranslucencyTip.Visibility = Visibility.Visible;
+        }
+
+        private void ArtTranslucency_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Border_ArtTranslucencyTip.Visibility = Visibility.Collapsed;
+        }
+
+        private void ComboBox_CreatePalMode_MouseEnter(object sender, MouseEventArgs e)
+        {
+            Border_CreatePaletteModeTip.Visibility = Visibility.Visible;
+        }
+
+        private void ComboBox_CreatePalMode_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Border_CreatePaletteModeTip.Visibility= Visibility.Collapsed;
+        }
+
+        private void CheckBox_PlayerColor_Changed(object sender, RoutedEventArgs e)
+        {
+            if (CheckBox_PlayerColor.IsChecked == true)
+            {
+                Button_EditPlayerColor.IsEnabled = true;
+            }
+            else
+            {
+                Button_EditPlayerColor.IsEnabled = false;
+            }
+
+            if (GData.PaletteConfig.PalettePlayerColor.Count < 16)
+            {
+                GData.PaletteConfig.PalettePlayerColor.Count();
+
+                for (int _ = 0; _ < 16; _++)
+                {
+                    GData.PaletteConfig.PalettePlayerColor.Add(Ra2PaletteColor.FromArgb(0, 0, 0, 0));
+                }
+            }
+        }
+
+        private void Button_SetPalHeaderColor_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = sender as Button;
+            int index = StackPanel_PaletteHeaderColor.Children.IndexOf(button);
+
+            System.Windows.Forms.ColorDialog colorDialog = new System.Windows.Forms.ColorDialog();
+            if (colorDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Ra2PaletteColor selectedColor = Ra2PaletteColor.FromColor(colorDialog.Color);
+
+                GData.PaletteConfig.PaletteHeaderColor[index] = selectedColor;
+                (StackPanel_PaletteHeaderColor.Children[index] as Button).Background = new SolidColorBrush(System.Windows.Media.Color.FromRgb((byte)(selectedColor.R * 4), (byte)(selectedColor.G * 4), (byte)(selectedColor.B * 4)));
+            }
+        }
+
+        private void ClearPalHeaderColor(object sender, MouseButtonEventArgs e)
+        {
+            Button button = sender as Button;
+            int index = StackPanel_PaletteHeaderColor.Children.IndexOf(button);
+            GData.PaletteConfig.PaletteHeaderColor[index] = Ra2PaletteColor.FromArgb(0, 0, 0, 0);
+            (StackPanel_PaletteHeaderColor.Children[index] as Button).Background = System.Windows.Media.Brushes.Transparent;
         }
     }
 }

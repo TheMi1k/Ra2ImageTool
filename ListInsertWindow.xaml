@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ra2ImageTool"
         mc:Ignorable="d"
-        Title="插入选项" Height="220" Width="300">
+        Title="插入选项" FontSize="15" Height="220" Width="300">
     <Grid>
         <StackPanel>
             <TextBlock x:Name="TextBlock_OptionTip" d:Text="往00001位置插入空行，00001及下方内容往下移动" FontSize="17" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Center" Width="240" Height="70" Margin="0 20 0 0"/>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 5 0 0">
                 <TextBlock Text="插入行数"/>
-                <TextBox x:Name="TextBox_InsertLine" Width="70" Margin="5 0 0 0"/>
+                <TextBox x:Name="TextBox_InsertLine" d:Text="999" Width="70" Margin="5 0 0 0"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0 20 0 0">
                 <Button x:Name="Button_Option1" Content="取消" Width="60" FontSize="20" Click="Button_Option1_Click"/>

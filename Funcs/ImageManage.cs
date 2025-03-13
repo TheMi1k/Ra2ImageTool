@@ -20,127 +20,6 @@ namespace Ra2ImageTool.Funcs
 {
     internal class ImageManage
     {
-        //internal static void ConvertImage(int index)
-        //{
-        //    if (GData.ListViewData.Count == 0)
-        //    {
-        //        return;
-        //    }
-        //    if (index > GData.ListViewData.Count - 1)
-        //    {
-        //        return;
-        //    }
-        //    if (GData.ListViewData[index].InImg == null)
-        //    {
-        //        return;
-        //    }
-
-        //    GData.ListViewData[index].IsChanged = true;
-
-        //    int alpha = GData.ListViewData[index].Alpha;
-        //    double transparentDiffusion = GData.ListViewData[index].TransparentDiffusion;
-        //    double lightness = GData.ListViewData[index].Lightness;
-        //    bool isTransparent = GData.ListViewData[index].IsTransparent;
-
-        //    double outlineTransparentStep = 0;
-
-        //    if (isTransparent)
-        //    {
-        //        if (GData.ListViewData[index].DistanceMatrix == null)
-        //        {
-        //            GData.ListViewData[index].DistanceMatrix = GetDistanceMatrix(GData.ListViewData[index].InImg);
-        //        }
-
-        //        int rows = GData.ListViewData[index].DistanceMatrix.GetLength(0);
-        //        int cols = GData.ListViewData[index].DistanceMatrix.GetLength(1);
-
-        //        double maxDistance = -1;
-        //        for (int r = 0; r < rows; r++)
-        //        {
-        //            for (int c = 0; c < cols; c++)
-        //            {
-        //                if (GData.ListViewData[index].DistanceMatrix[r, c] > maxDistance)
-        //                {
-        //                    maxDistance = GData.ListViewData[index].DistanceMatrix[r, c];
-        //                }
-        //            }
-        //        }
-
-        //        outlineTransparentStep = 255 / maxDistance;
-        //    }
-
-        //    for (int y = 0; y < GData.ListViewData[index].InImg.Height; y++)
-        //    {
-        //        for (int x = 0; x < GData.ListViewData[index].InImg.Width; x++)
-        //        {
-        //            int newAlpha = -1;
-        //            Color pixel = GData.ListViewData[index].InImg.GetPixel(x, y);
-        //            int _alpha = pixel.A;
-
-        //            if (isTransparent && pixel.A > 0)
-        //            {
-        //                _alpha = (int)Math.Round((GData.ListViewData[index].DistanceMatrix[y, x] * outlineTransparentStep));
-        //                if (_alpha > 255)
-        //                {
-        //                    _alpha = 255;
-        //                }
-        //                if (_alpha < 0)
-        //                {
-        //                    _alpha = 0;
-        //                }
-
-        //                newAlpha = _alpha;
-
-        //                if (pixel.A > 0)
-        //                {
-        //                    _alpha -= alpha;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                if (pixel.A > 0)
-        //                {
-        //                    _alpha = pixel.A - alpha;
-        //                }
-        //            }
-
-        //            if (_alpha > 255)
-        //            {
-        //                _alpha = 255;
-        //            }
-        //            if (_alpha < 0)
-        //            {
-        //                _alpha = 0;
-        //            }
-
-        //            if (_alpha >= 255)
-        //            {
-        //                GData.ListViewData[index].OutImg.SetPixel(x, y, SetPixelLightness(pixel, lightness));
-        //            }
-        //            else if (_alpha <= 0)
-        //            {
-        //                GData.ListViewData[index].OutImg.SetPixel(x, y, Color.Transparent);
-        //            }
-        //            else
-        //            {
-        //                int matrixValue = GData.BayerMatrix[y % GData.MatrixSize, x % GData.MatrixSize];
-        //                if (_alpha * transparentDiffusion > matrixValue)
-        //                {
-        //                    GData.ListViewData[index].OutImg.SetPixel(x, y, SetPixelLightness(pixel, lightness, newAlpha));
-        //                }
-        //                else
-        //                {
-        //                    GData.ListViewData[index].OutImg.SetPixel(x, y, Color.Transparent);
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    GData.ListViewData[index].DistanceMatrix = null;
-
-        //    GC.Collect();
-        //}
-
         internal static void ConvertImage(int index)
         {
             if (GData.ListViewData.Count == 0)
@@ -273,7 +152,7 @@ namespace Ra2ImageTool.Funcs
                         if (_alpha * transparentDiffusion > matrixValue)
                         {
                             byte[] colors = SetPixelLightness(pixelA, pixelR, pixelG, pixelB, lightness, newAlpha);
-                            
+
                             rgbValues[imgByteIndex] = colors[3]; // B
                             rgbValues[imgByteIndex + 1] = colors[2]; // G
                             rgbValues[imgByteIndex + 2] = colors[1]; // R
@@ -305,41 +184,6 @@ namespace Ra2ImageTool.Funcs
         {
             return Math.Max(0, Math.Min(255, value));
         }
-
-        //private static Color SetPixelLightness(Color color, double k, int newAlpha = -1)
-        //{
-        //    int A;
-        //    if (newAlpha != -1)
-        //    {
-        //        A = newAlpha;
-        //    }
-        //    else
-        //    {
-        //        A = color.A;
-        //    }
-
-        //    float alphaFactor = A / 255.0f;
-
-        //    int R, G, B;
-
-        //    if (k < 0)
-        //    {
-        //        // 变黑 (k 负)
-        //        float darkFactor = (float)Math.Pow(alphaFactor, Math.Abs(k));
-        //        R = (int)(color.R * darkFactor);
-        //        G = (int)(color.G * darkFactor);
-        //        B = (int)(color.B * darkFactor);
-        //    }
-        //    else
-        //    {
-        //        // 变白 (k 正)
-        //        R = (int)(color.R + (255 - color.R) * (1 - alphaFactor) * k);
-        //        G = (int)(color.G + (255 - color.G) * (1 - alphaFactor) * k);
-        //        B = (int)(color.B + (255 - color.B) * (1 - alphaFactor) * k);
-        //    }
-
-        //    return Color.FromArgb(255, Clamp(R), Clamp(G), Clamp(B));
-        //}
 
         private static byte[] SetPixelLightness(byte pixelA, byte pixelR, byte pixelG, byte pixelB, double k, int newAlpha = -1)
         {
@@ -411,7 +255,7 @@ namespace Ra2ImageTool.Funcs
 
                 foreach (var frame in gifDecoder.Frames)
                 {
-                    frames.Add(BitmapSourceToBitmap(frame));
+                    frames.Add(ImageTypeConvert.BitmapSourceToBitmap(frame));
                 }
             }
 
@@ -438,7 +282,7 @@ namespace Ra2ImageTool.Funcs
             }
         }
 
-        internal static double[,] GetDistanceMatrix(Bitmap bitmap)
+        private static double[,] GetDistanceMatrix(Bitmap bitmap)
         {
             byte[,] matrix = new byte[bitmap.Height, bitmap.Width];
 
@@ -455,12 +299,7 @@ namespace Ra2ImageTool.Funcs
             int pixelSize = 4;
             for (int i = 0; i < rgbValues.Length; i += pixelSize)
             {
-                //byte blue = rgbValues[i];
-                //byte green = rgbValues[i + 1];
-                //byte red = rgbValues[i + 2];
                 byte alpha = rgbValues[i + 3];
-
-                //Color c = Color.FromArgb(255, (int)Math.Floor(red / 4f), (int)Math.Floor(green / 4f), (int)Math.Floor(blue / 4f));
 
                 if (alpha == 0)
                 {
@@ -480,23 +319,6 @@ namespace Ra2ImageTool.Funcs
             }
 
             bitmap.UnlockBits(bmpData);
-
-
-            //for (int h = 0; h < bitmap.Height; h++)
-            //{
-            //    for (int w = 0; w < bitmap.Width; w++)
-            //    {
-            //        var c = bitmap.GetPixel(w, h);
-            //        if (c.A == 0)
-            //        {
-            //            matrix[h, w] = 0;
-            //        }
-            //        else
-            //        {
-            //            matrix[h, w] = 1;
-            //        }
-            //    }
-            //}
 
             double[,] distanceMatrix = GetDistance(matrix);
 
@@ -585,10 +407,10 @@ namespace Ra2ImageTool.Funcs
             BitmapSource outImgBitmapSource = null;
             if (outImg != null)
             {
-                outImgBitmapSource = BitmapToBitmapSource(outImg);
+                outImgBitmapSource = ImageTypeConvert.BitmapToBitmapSource(outImg);
             }
 
-            BitmapSource overlayImgBitmapSource = BitmapToBitmapSource(overlayImg);
+            BitmapSource overlayImgBitmapSource = ImageTypeConvert.BitmapToBitmapSource(overlayImg);
 
             DrawingVisual visual = new DrawingVisual();
             using (DrawingContext dc = visual.RenderOpen())
@@ -618,40 +440,17 @@ namespace Ra2ImageTool.Funcs
             RenderTargetBitmap mergedBitmap = new RenderTargetBitmap(width, height, 96, 96, PixelFormats.Pbgra32);
             mergedBitmap.Render(visual);
 
-            return BitmapSourceToBitmap(mergedBitmap);
-        }
-
-        private static Bitmap BitmapSourceToBitmap(BitmapSource bitmapSource)
-        {
-            using (MemoryStream stream = new MemoryStream())
-            {
-                BitmapEncoder encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(bitmapSource));
-                encoder.Save(stream);
-
-                return new Bitmap(stream);
-            }
-        }
-
-        private static BitmapSource BitmapToBitmapSource(Bitmap bitmap)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                bitmap.Save(ms, ImageFormat.Png);
-                ms.Seek(0, SeekOrigin.Begin);
-                BitmapDecoder decoder = new PngBitmapDecoder(ms, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
-                return decoder.Frames[0];
-            }
+            return ImageTypeConvert.BitmapSourceToBitmap(mergedBitmap);
         }
 
         /// <summary>
         /// 移除相似颜色
         /// </summary>
         /// <param name="colorDic"></param>
-        private static void RemoveSimilarColors(Dictionary<Color, int> colorDic)
+        private static void RemoveSimilarColors(Dictionary<Ra2PaletteColor, int> colorDic)
         {
-            List<Color> allColorList = new List<Color>();
-            HashSet<Color> removeList = new HashSet<Color>();
+            List<Ra2PaletteColor> allColorList = new List<Ra2PaletteColor>();
+            HashSet<Ra2PaletteColor> removeList = new HashSet<Ra2PaletteColor>();
 
             foreach (var kv in colorDic)
             {
@@ -681,23 +480,113 @@ namespace Ra2ImageTool.Funcs
             }
         }
 
-        internal static async Task<List<Color>> CreatePalette(int palColorNum, Color paletteBackground, string mode)
+        private static void RemovePlayerColors(List<Ra2PaletteColor> colors, List<Ra2PaletteColor> playerColors)
         {
+            if (colors.Count == 0)
+            {
+                return;
+            }
+
+            List<Ra2PaletteColor> removeList = new List<Ra2PaletteColor>();
+
+            foreach (var c in colors)
+            {
+                foreach (var pc in playerColors)
+                {
+                    if (pc.A == 0)
+                    {
+                        continue;
+                    }
+
+                    if (Math.Abs(c.R - pc.R) + Math.Abs(c.G - pc.G) + Math.Abs(c.B - pc.B) <= 15)
+                    {
+                        removeList.Add(c);
+                        break;
+                    }
+                }
+            }
+
+            foreach (var item in removeList)
+            {
+                colors.Remove(item);
+            }
+        }
+
+        private static void RemovePlayerColors(HashSet<Color> colors, List<Ra2PaletteColor> playerColors)
+        {
+            if (colors.Count == 0)
+            {
+                return;
+            }
+
+            List<Color> removeList = new List<Color>();
+
+            foreach (var c in colors)
+            {
+                foreach (var pc in playerColors)
+                {
+                    if (pc.A == 0)
+                    {
+                        continue;
+                    }
+
+                    if (Math.Abs((c.R / 4) - pc.R) + Math.Abs((c.G / 4) - pc.G) + Math.Abs((c.B / 4) - pc.B) <= 15)
+                    {
+                        removeList.Add(c);
+                        break;
+                    }
+                }
+            }
+
+            foreach (var item in removeList)
+            {
+                colors.Remove(item);
+            }
+        }
+
+        internal static async Task<List<Ra2PaletteColor>> CreatePalette(int palColorNum, Ra2PaletteColor[] paletteHeaderColor, List<Ra2PaletteColor> playerColorList, string mode)
+        {
+            List<Ra2PaletteColor> playerColorSetBackgroud = null;
+            if (playerColorList != null)
+            {
+                playerColorSetBackgroud = new List<Ra2PaletteColor>();
+                foreach (var color in playerColorList)
+                {
+                    if (color.A == 0)
+                    {
+                        playerColorSetBackgroud.Add(paletteHeaderColor[0]);
+                    }
+                    else
+                    {
+                        playerColorSetBackgroud.Add(color);
+                    }
+                }
+            }
+
+            List<Ra2PaletteColor> headerColors = new List<Ra2PaletteColor>();
+            foreach (var phc in paletteHeaderColor)
+            {
+                if (phc.A != 0)
+                {
+                    headerColors.Add(phc);
+                }
+            }
+
             if (mode == GData.CreatePalMode.主要颜色补小像素.ToString())
             {
                 if (palColorNum < 150)
                 {
                     throw new Exception("该色盘生成方法颜色数量不能小于150");
                 }
-                return await ImageManage.Generate256ColorPalette_Mode3(palColorNum, paletteBackground);
+                return await Create256ColorPalette_Mode3(palColorNum, headerColors.ToArray(), playerColorSetBackgroud);
             }
             else if (mode == GData.CreatePalMode.主要颜色.ToString())
             {
-                return await Generate256ColorPalette_Mode1(palColorNum, paletteBackground);
+                return await Create256ColorPalette_Mode1(palColorNum, headerColors.ToArray(), playerColorSetBackgroud);
             }
             else
             {
-                return await Generate256ColorPalette_Mode2(palColorNum, paletteBackground);
+                return await Create256ColorPalette_Mode2(palColorNum, headerColors.ToArray(), playerColorSetBackgroud);
             }
         }
 
@@ -706,9 +595,9 @@ namespace Ra2ImageTool.Funcs
         /// </summary>
         /// <param name="palColorNum"></param>
         /// <returns></returns>
-        internal static async Task<List<Color>> Generate256ColorPalette_Mode1(int palColorNum, Color paletteBackground)
+        private static async Task<List<Ra2PaletteColor>> Create256ColorPalette_Mode1(int palColorNum, Ra2PaletteColor[] paletteHeaderColor, List<Ra2PaletteColor> playerColorList)
         {
-            Dictionary<Color, int> colorCounts = new Dictionary<Color, int>();
+            Dictionary<Ra2PaletteColor, int> colorCounts = new Dictionary<Ra2PaletteColor, int>();
 
             int sucCount = 0;
             int maxCount = GData.ListViewData.Count;
@@ -744,7 +633,7 @@ namespace Ra2ImageTool.Funcs
                                 continue;
                             }
 
-                            Color c = Color.FromArgb(255, (int)Math.Floor(red / 4f), (int)Math.Floor(green / 4f), (int)Math.Floor(blue / 4f));
+                            Ra2PaletteColor c = Ra2PaletteColor.FromArgb(255, red, green, blue);
 
                             if (colorCounts.ContainsKey(c))
                             {
@@ -767,20 +656,30 @@ namespace Ra2ImageTool.Funcs
                 }
             });
 
-            if (colorCounts.Count > palColorNum - 1)
-            {
-                RemoveSimilarColors(colorCounts);
-            }
+            RemoveSimilarColors(colorCounts);
 
             var result = colorCounts.OrderByDescending(c => c.Value)
-                              .Take(palColorNum - 1)
                               .Select(c => c.Key)
                               .ToList();
 
+            if (playerColorList != null)
+            {
+                RemovePlayerColors(result, playerColorList);
+            }
 
-            Color backgroundColor = Color.FromArgb(255, (int)Math.Floor(paletteBackground.R / 4f), (int)Math.Floor(paletteBackground.G / 4f), (int)Math.Floor(paletteBackground.B / 4f));
+            // 插入头部颜色
+            for (int i = paletteHeaderColor.Length - 1; i >= 0; i--)
+            {
+                result.Insert(0, paletteHeaderColor[i]);
+            }
 
-            result.Insert(0, backgroundColor);
+            // 插入玩家所属色
+            if (playerColorList != null)
+            {
+                result.InsertRange(16, playerColorList);
+            }
+
+            result = result.Take(palColorNum).ToList();
 
             while (true)
             {
@@ -789,7 +688,7 @@ namespace Ra2ImageTool.Funcs
                     break;
                 }
 
-                result.Add(backgroundColor);
+                result.Add(paletteHeaderColor[0]);
             }
 
             GC.Collect();
@@ -802,7 +701,7 @@ namespace Ra2ImageTool.Funcs
         /// </summary>
         /// <param name="palColorNum"></param>
         /// <returns></returns>
-        internal static async Task<List<Color>> Generate256ColorPalette_Mode2(int palColorNum, Color paletteBackground)
+        private static async Task<List<Ra2PaletteColor>> Create256ColorPalette_Mode2(int palColorNum, Ra2PaletteColor[] paletteHeaderColor, List<Ra2PaletteColor> playerColorList)
         {
             HashSet<Color> hs = new HashSet<Color>();
 
@@ -856,6 +755,13 @@ namespace Ra2ImageTool.Funcs
                 }
             });
 
+            int numSub = 0;
+            if (playerColorList != null)
+            {
+                RemovePlayerColors(hs, playerColorList);
+                numSub = 16;
+            }
+
             Bitmap allColorBitmap = new Bitmap(hs.Count, 1);
             int count = 0;
             foreach (var c in hs)
@@ -866,7 +772,7 @@ namespace Ra2ImageTool.Funcs
 
             ImageFactory factory = new ImageFactory();
             factory.Load(allColorBitmap);
-            ISupportedImageFormat format = new PngFormat { Quality = 100, IsIndexed = true, Quantizer = new OctreeQuantizer(palColorNum - 1, 8) };
+            ISupportedImageFormat format = new PngFormat { Quality = 100, IsIndexed = true, Quantizer = new OctreeQuantizer(palColorNum - paletteHeaderColor.Length - numSub, 8) };
             factory.Format(format);
             MemoryStream stream = new MemoryStream();
             factory.Save(stream);
@@ -874,21 +780,30 @@ namespace Ra2ImageTool.Funcs
             stream.Dispose();
             DisposeBitmap(allColorBitmap);
 
-            HashSet<Color> set = new HashSet<Color>();
+            HashSet<Ra2PaletteColor> set = new HashSet<Ra2PaletteColor>();
 
             for (int x = 0; x < src.Width; x++)
             {
-                var c = src.GetPixel(x, 0);
-                set.Add(Color.FromArgb(255, c.R / 4, c.G / 4, c.B / 4));
+                set.Add(Ra2PaletteColor.FromColor(src.GetPixel(x, 0)));
             }
 
             DisposeBitmap(src);
 
             var result = set.ToList();
 
-            Color addColor = Color.FromArgb(255, (int)Math.Floor(paletteBackground.R / 4f), (int)Math.Floor(paletteBackground.G / 4f), (int)Math.Floor(paletteBackground.B / 4f));
+            // 插入头部颜色
+            for (int i = paletteHeaderColor.Length - 1; i >= 0; i--)
+            {
+                result.Insert(0, paletteHeaderColor[i]);
+            }
 
-            result.Insert(0, addColor);
+            // 插入玩家所属色
+            if (playerColorList != null && playerColorList.Count == 16)
+            {
+                result.InsertRange(16, playerColorList);
+            }
+
+            result = result.Take(palColorNum).ToList();
 
             while (true)
             {
@@ -897,7 +812,7 @@ namespace Ra2ImageTool.Funcs
                     break;
                 }
 
-                result.Add(addColor);
+                result.Add(paletteHeaderColor[0]);
             }
 
             GC.Collect();
@@ -910,23 +825,23 @@ namespace Ra2ImageTool.Funcs
         /// </summary>
         /// <param name="palColorNum"></param>
         /// <returns></returns>
-        internal static async Task<List<Color>> Generate256ColorPalette_Mode3(int palColorNum, Color paletteBackground)
+        private static async Task<List<Ra2PaletteColor>> Create256ColorPalette_Mode3(int palColorNum, Ra2PaletteColor[] paletteHeaderColor, List<Ra2PaletteColor> playerColorList)
         {
-            Dictionary<Color, int> colorCounts = new Dictionary<Color, int>();
+            Dictionary<Ra2PaletteColor, int> colorCounts = new Dictionary<Ra2PaletteColor, int>();
 
             int sucCount = 0;
             int maxCount = GData.ListViewData.Count;
 
             GData.UIData.SetProgressUI(sucCount, maxCount);
 
-            List<Color> colorBase = new List<Color>();
-            for (int r = 4; r <= 244; r += 60)
+            List<Ra2PaletteColor> colorBase = new List<Ra2PaletteColor>();
+            for (byte r = 4; r <= 244; r += 60)
             {
-                for (int g = 4; g <= 244; g += 60)
+                for (byte g = 4; g <= 244; g += 60)
                 {
-                    for (int b = 4; b <= 244; b += 60)
+                    for (byte b = 4; b <= 244; b += 60)
                     {
-                        colorBase.Add(Color.FromArgb(255, r / 4, g / 4, b / 4));
+                        colorBase.Add(Ra2PaletteColor.FromArgb(255, r, g, b));
                     }
                 }
             }
@@ -960,7 +875,7 @@ namespace Ra2ImageTool.Funcs
                                 continue;
                             }
 
-                            Color c = Color.FromArgb(255, (int)Math.Floor(red / 4f), (int)Math.Floor(green / 4f), (int)Math.Floor(blue / 4f));
+                            Ra2PaletteColor c = Ra2PaletteColor.FromArgb(255, red, green, blue);
 
                             if (colorCounts.ContainsKey(c))
                             {
@@ -984,13 +899,14 @@ namespace Ra2ImageTool.Funcs
 
             });
 
-            HashSet<Color> appendColor = new HashSet<Color>();
+            HashSet<Ra2PaletteColor> appendColor = new HashSet<Ra2PaletteColor>();
 
             if (colorCounts.Count > palColorNum - 1)
             {
                 RemoveSimilarColors(colorCounts);
 
-                Color ac = Color.Black;
+                // 获取原图片中对于base颜色中最相近的颜色
+                Ra2PaletteColor ac = Ra2PaletteColor.FromArgb(0, 0, 0, 0);
                 foreach (var cb in colorBase)
                 {
                     int minOffset = int.MaxValue;
@@ -1014,11 +930,32 @@ namespace Ra2ImageTool.Funcs
                 }
             }
 
-            var result = colorCounts.OrderByDescending(c => c.Value).Take(palColorNum - 1).Select(c => c.Key).ToList();
+            var result = colorCounts.OrderByDescending(c => c.Value).Select(c => c.Key).ToList();
 
+            if (playerColorList != null)
+            {
+                RemovePlayerColors(result, playerColorList);
+            }
+
+            // 插入头部颜色
+            for (int i = paletteHeaderColor.Length - 1; i >= 0; i--)
+            {
+                result.Insert(0, paletteHeaderColor[i]);
+            }
+
+            // 插入玩家所属色
+            if (playerColorList != null)
+            {
+                result.InsertRange(16, playerColorList);
+            }
+
+            result = result.Take(palColorNum).ToList();
+
+            // 插入细节颜色
             if (appendColor.Count > 0)
             {
-                List<Color> insertBaseColorList = new List<Color>();
+                // 判断当前色盘中有没有这个色
+                List<Ra2PaletteColor> insertBaseColorList = new List<Ra2PaletteColor>();
                 foreach (var cb in appendColor)
                 {
                     bool isContains = false;
@@ -1036,16 +973,17 @@ namespace Ra2ImageTool.Funcs
                     }
                 }
 
+                if (playerColorList != null)
+                {
+                    RemovePlayerColors(insertBaseColorList, playerColorList);
+                }
+
                 if (insertBaseColorList.Count > 0)
                 {
                     result.RemoveRange(result.Count - insertBaseColorList.Count - 1, insertBaseColorList.Count);
                     result.AddRange(insertBaseColorList);
                 }
             }
-
-            Color backgroundColor = Color.FromArgb(255, (int)Math.Floor(paletteBackground.R / 4f), (int)Math.Floor(paletteBackground.G / 4f), (int)Math.Floor(paletteBackground.B / 4f));
-
-            result.Insert(0, backgroundColor);
 
             while (true)
             {
@@ -1054,13 +992,12 @@ namespace Ra2ImageTool.Funcs
                     break;
                 }
 
-                result.Add(backgroundColor);
+                result.Add(paletteHeaderColor[0]);
             }
 
             GC.Collect();
 
             return result;
         }
-
     }
 }

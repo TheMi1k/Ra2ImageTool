@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ra2ImageTool"
         mc:Ignorable="d"
-        Title="Ra2ImageTool" Height="800" Width="1330"
+        Title="Ra2ImageTool" FontSize="15" Height="750" Width="1230"
         ResizeMode="CanMinimize">
 
     <Window.Resources>
@@ -20,7 +20,7 @@
     
     <Grid x:Name="Grid_Main">
         <StackPanel>
-            <Menu Margin="0 0 0 0">
+            <Menu Margin="0 0 0 0" FontSize="15">
                 <MenuItem Width="80" HorizontalContentAlignment="Left" Margin="10 0 0 0">
                     <MenuItem.Header>
                         <TextBlock Text="文件" Margin="15 0 0 0"/>
@@ -39,12 +39,12 @@
                     <MenuItem Header="关于" HorizontalContentAlignment="Left"  Click="MenuItem_About_Click"/>
                 </MenuItem>
             </Menu>
-            
+
             <StackPanel Orientation="Horizontal" Margin="10 10 0 0">
                 <StackPanel>
                     <DataGrid x:Name="ListView_Images"
                         Drop="Img_Drop" AllowDrop="True"
-                        Height="640" Width="260"
+                        Height="590" Width="260"
                         VerticalAlignment="Top"
                         MouseDoubleClick="ListView_Images_DoubleClick"
                         AutoGenerateColumns="False"
@@ -60,17 +60,17 @@
                         PreviewMouseRightButtonDown="DataGrid_MouseRightButtonDown"
                     >
                         <DataGrid.ContextMenu>
-                            <ContextMenu x:Name="dataGridContextMenu">
+                            <ContextMenu x:Name="dataGridContextMenu" FontSize="15">
                                 <MenuItem x:Name="MenuItem1" Click="InsertMenuItem_Click" Margin="0 0 0 0" HorizontalAlignment="Left" Width="300"/>
                             </ContextMenu>
                         </DataGrid.ContextMenu>
-                        
+
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Width="40" >
                                 <DataGridTemplateColumn.Header>
                                     <TextBlock Text=""/>
                                 </DataGridTemplateColumn.Header>
-                                
+
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding IndexStr}" FontSize="13" Foreground="{Binding StrColor}" Style="{StaticResource MyStyle}" Height="17" Margin="0 4 0 0"/>
@@ -82,7 +82,7 @@
                                 <DataGridTemplateColumn.Header>
                                     <TextBlock Text="操作图片列表" FontSize="14" Style="{StaticResource MyStyle}"/>
                                 </DataGridTemplateColumn.Header>
-                                
+
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Name}" FontSize="13" Foreground="{Binding StrColor}" Style="{StaticResource MyStyle}" Height="17" Margin="0 4 0 0"/>
@@ -94,7 +94,7 @@
                                 <DataGridTemplateColumn.Header>
                                     <TextBlock Text="叠加图片列表" FontSize="14" Style="{StaticResource MyStyle}"/>
                                 </DataGridTemplateColumn.Header>
-                                
+
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding NameOverlay}" FontSize="13" Foreground="{Binding OverlayStrColor}" Style="{StaticResource MyStyle}" Height="17" Margin="0 4 0 0"/>
@@ -114,11 +114,10 @@
                         <Button Content="清空叠加列表" Click="Button_ClearList2_Click" Margin="40 0 0 0"/>
                     </StackPanel>
                 </StackPanel>
-               
 
                 <StackPanel Margin="10 0 0 0">
                     <StackPanel Orientation="Horizontal">
-                        <Border x:Name="Border_InImg" Width="500" Height="500" BorderThickness="1" BorderBrush="Gray" Margin="0 0 0 0">
+                        <Border x:Name="Border_InImg" Width="450" Height="450" BorderThickness="1" BorderBrush="Gray" Margin="0 0 0 0">
                             <Border.Background>
                                 <ImageBrush/>
                             </Border.Background>
@@ -133,11 +132,11 @@
                                        />
                                     </Grid>
                                 </Grid>
-                                
+
                             </ScrollViewer>
                         </Border>
 
-                        <Border x:Name="Border_OutImg" Width="500" Height="500" BorderThickness="1" BorderBrush="Gray" Margin="20 0 0 0">
+                        <Border x:Name="Border_OutImg" Width="450" Height="450" BorderThickness="1" BorderBrush="Gray" Margin="20 0 0 0">
                             <Border.Background>
                                 <ImageBrush/>
                             </Border.Background>
@@ -167,16 +166,15 @@
                         </Border>
                     </StackPanel>
 
-
                     <StackPanel Margin="0 10 0 0" Orientation="Horizontal">
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="当前图像序号:   "/>
-                                    <TextBlock x:Name="TextBlock_NowIndex" Text="{Binding IndexStr, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="50"/>
+                                    <TextBlock Text="当前图像序号:" FontSize="16"/>
+                                    <TextBlock x:Name="TextBlock_NowIndex" Text="{Binding IndexStr, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  FontSize="16" Width="60" Margin="10 0 0 0"/>
                                 </StackPanel>
 
-                                <Button Content="预览背景颜色/图片(图片拖到这)" Height="25" AllowDrop="True" Drop="SetBackgroundImage" Click="SelectColor_Click" Margin="10 0 0 0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                                <Button Content="预览背景颜色/图片(图片拖到这)" Height="25" AllowDrop="True" Drop="SetBackgroundImage" Click="SelectViewBackgroundColor_Click" Margin="10 0 0 0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
 
                                 <Button x:Name="Button_Play" Content="播放" Width="60" Height="25" Click="Button_Play_Click" Margin="30 0 0 0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                             </StackPanel>
@@ -186,12 +184,12 @@
                                     <StackPanel Orientation="Horizontal">
                                         <StackPanel Margin="0 5 0 0">
                                             <CheckBox x:Name="CheckBox_OutlineTransparent" Content="按轮廓透明过渡(对不带透明过渡图片使用的)" IsChecked="{Binding IsTransparent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Checked="CheckBox_OutlineTransparent_Changed" Unchecked="CheckBox_OutlineTransparent_Changed"/>
-                                            
+
                                             <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="透明度扩散"  Width="90"/>
+                                                    <TextBlock Text="透明度扩散" Width="90"/>
                                                     <Slider x:Name="Slider_TransparentDiffusion"
-                                                    Width="300"
+                                                    Width="265"
                                                     Minimum="0.01"
                                                     Maximum="1.5"
                                                     TickFrequency="0.01"
@@ -207,9 +205,9 @@
                                             </StackPanel>
 
                                             <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
-                                                <TextBlock Text="边缘明暗度"  Width="90"/>
+                                                <TextBlock Text="边缘明暗度" Width="90"/>
                                                 <Slider x:Name="Slider_Lightness"
-                                                    Width="300"
+                                                    Width="265"
                                                     Minimum="-1.0"
                                                     Maximum="1.0"
                                                     TickFrequency="0.01"
@@ -226,7 +224,7 @@
                                             <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
                                                 <TextBlock Text="整体透明度" Width="90"/>
                                                 <Slider x:Name="Slider_Alpha"
-                                                    Width="300"
+                                                    Width="265"
                                                     Minimum="-255"
                                                     Maximum="255"
                                                     TickFrequency="1"
@@ -248,44 +246,28 @@
                                             </StackPanel>
                                         </StackPanel>
 
-                                        <StackPanel Margin="0 0 0 0">
-                                            <!--<StackPanel>
-                                                <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
-                                                    <TextBlock Text="轮廓不透明度" Width="90"/>
-                                                    <Slider x:Name="Slider_OutlineTransparentOffset"
-                                                        Width="240"
-                                                        Minimum="-255"
-                                                        Maximum="255"
-                                                        TickFrequency="1"
-                                                        Value="{Binding OutlineTransparentOffset, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                        IsSnapToTickEnabled="True" 
-                                                        AutoToolTipPlacement="BottomRight"
-                                                        AutoToolTipPrecision="0"
-                                                        Margin="20 0 0 0"
-                                                        PreviewMouseUp="Slider_MouseUp"
-                                                        IsEnabled="False"
-                                                    />
-                                                    <TextBlock x:Name="TextBlock_OutlineTransparentOffset" Text="{Binding OutlineTransparentOffset, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="40" Margin="5 0 0 0"/>
-                                                </StackPanel>
-                                            </StackPanel>-->
-
-                                            <Border BorderThickness="1" BorderBrush="Black" Width="80" Margin="50 0 0 0">
+                                        <StackPanel Margin="20 0 0 0">
+                                            <Border BorderThickness="1" BorderBrush="Black" Width="80" Margin="0 0 0 0">
                                                 <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Drop="Drop_GifToPng" AllowDrop="True" Width="78">
                                                     <TextBlock Text="GIF拖到这" HorizontalAlignment="Center"/>
                                                     <TextBlock Text="导出PNG" HorizontalAlignment="Center"/>
                                                 </StackPanel>
                                             </Border>
-                                            
-                                            <Button Height="27" Content="应用到所有操作图片" VerticalAlignment="Top" HorizontalAlignment="Left" Click="Button_ApplyToAllImg_Click" Margin="0 45 0 0"/>
 
+                                            <Button Height="40" VerticalAlignment="Top" HorizontalAlignment="Left" Click="Button_ApplyToAllImg_Click" Margin="0 30 0 0">
+                                                <StackPanel>
+                                                    <TextBlock Text="应用到"/>
+                                                    <TextBlock Text="所有图片"/>
+                                                </StackPanel>
+                                            </Button>
                                         </StackPanel>
 
-                                        <GroupBox Margin="40 0 0 0">
+                                        <GroupBox Margin="15 0 0 0">
                                             <GroupBox.Header>
-                                                <TextBlock Text="叠加图片" FontSize="15"/>
+                                                <TextBlock Text="叠加图片"/>
                                             </GroupBox.Header>
                                             <StackPanel Orientation="Vertical" Margin="0 10 0 0">
-                                                <ComboBox x:Name="ComboBox_OverlayMode" SelectedItem="{Binding OverlayMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="90" FontSize="15" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 0 0 0"/>
+                                                <ComboBox x:Name="ComboBox_OverlayMode" SelectedItem="{Binding OverlayMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="90" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0 0 0 0"/>
 
                                                 <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
                                                     <StackPanel Margin="0 0 0 0">
@@ -306,37 +288,67 @@
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
+
+                        <GroupBox x:Name="GroupBox_Export" Header="导出图片 / 生成色盘" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5 0 0 0">
+                            <StackPanel Margin="5 0 0 0">
+
+                                <Button Content="导出全部图片" FontSize="18" Height="27" Click="Button_Export_Click"/>
+
+                                <StackPanel Margin="0 10 0 0" HorizontalAlignment="Left">
+                                    <StackPanel Orientation="Horizontal">
+                                        <CheckBox x:Name="CheckBox_PlayerColor" Content="所属色" Checked="CheckBox_PlayerColor_Changed" Unchecked="CheckBox_PlayerColor_Changed" Margin="0 3 0 0"/>
+                                        <Button x:Name="Button_EditPlayerColor" Content="所属色拾取" Click="Button_EditPlayerColor_Click" Margin="10 0 0 0" IsEnabled="False"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0 7 0 0" HorizontalAlignment="Left" MouseEnter="StackPanel_PaletteColorNum_MouseEnter" MouseLeave="StackPanel_PaletteColorNum_MouseLeave">
+                                        <TextBlock Text="色盘颜色数量"/>
+                                        <TextBox x:Name="TextBox_PalColorNum" Text="256" Width="40"/>
+                                    </StackPanel>
+
+                                    <StackPanel Margin="0 5 0 0">
+                                        <TextBlock Text="色盘背景/头部颜色" HorizontalAlignment="Left"/>
+
+                                        <StackPanel Orientation="Horizontal">
+                                            <Grid Margin="0 0 0 0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Path Width="16" Height="16" Margin="14 0 0 0" Fill="Black" Stretch="Fill" Data="M964.794062 100.92562 923.057495 59.190077 511.999488 470.263433 100.938412 59.190077 59.203892 100.92562 470.263945 512 59.232544 923.045727 100.968088 964.78127 511.999488 553.736567 923.057495 964.8089 964.794062 923.073356 553.732985 512Z"/>
+                                                    <Path Width="16" Height="16" Margin="24 0 0 0" Fill="Black" Stretch="Fill" Data="M964.794062 100.92562 923.057495 59.190077 511.999488 470.263433 100.938412 59.190077 59.203892 100.92562 470.263945 512 59.232544 923.045727 100.968088 964.78127 511.999488 553.736567 923.057495 964.8089 964.794062 923.073356 553.732985 512Z"/>
+                                                    <Path Width="16" Height="16" Margin="24 0 0 0" Fill="Black" Stretch="Fill" Data="M964.794062 100.92562 923.057495 59.190077 511.999488 470.263433 100.938412 59.190077 59.203892 100.92562 470.263945 512 59.232544 923.045727 100.968088 964.78127 511.999488 553.736567 923.057495 964.8089 964.794062 923.073356 553.732985 512Z"/>
+                                                </StackPanel>
+
+                                                <StackPanel x:Name="StackPanel_PaletteHeaderColor" Orientation="Horizontal">
+                                                    <Button Width="20" Height="20" Background="Transparent" Margin="12 0 0 0" Click="Button_SetPalHeaderColor_Click"/>
+                                                    <Button Width="20" Height="20" Background="Transparent" Margin="20 0 0 0" Click="Button_SetPalHeaderColor_Click" MouseRightButtonDown="ClearPalHeaderColor"/>
+                                                    <Button Width="20" Height="20" Background="Transparent" Margin="20 0 0 0" Click="Button_SetPalHeaderColor_Click" MouseRightButtonDown="ClearPalHeaderColor"/>
+                                                </StackPanel>
+
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="0"/>
+                                                    <TextBlock Text="1" Margin="30 0 0 0"/>
+                                                    <TextBlock Text="2" Margin="30 0 0 0"/>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <StackPanel Margin="25 -15 0 0">
+                                                <TextBlock Text="左键设置" FontSize="14"/>
+                                                <TextBlock Text="右键删除" FontSize="14"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="0 5 0 0" HorizontalAlignment="Right">
+                                        <ComboBox x:Name="ComboBox_CreatePalMode" FontSize="15" Width="150" Height="25" Margin="0 0 0 0" MouseEnter="ComboBox_CreatePalMode_MouseEnter" MouseLeave="ComboBox_CreatePalMode_MouseLeave"/>
+                                        <Button x:Name="Button_CreatePal" Content="生成" FontSize="20" Height="28" Width="50" Click="Button_CreatePal_Click" Margin="10 0 0 0" HorizontalAlignment="Right"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </GroupBox>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
         </StackPanel>
-
-        <GroupBox x:Name="GroupBox_Export" Header="导出" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0 0 35 40">
-            <StackPanel Margin="5 5 0 0">
-                <Button Content="导出全部图片" FontSize="20" Height="30" Click="Button_Export_Click"/>
-                <StackPanel Margin="0 20 0 0" HorizontalAlignment="Right">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <TextBlock Text="色盘背景色"/>
-                        <Button x:Name="Button_SetPalBackground" Content="" FontSize="14" Width="20" Height="20" Margin="5 0 0 0" Click="Button_SetPalBackground_Click"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0 2 0 0" HorizontalAlignment="Right">
-                        <TextBlock Text="颜色数量"/>
-                        <TextBox x:Name="TextBox_PalColorNum" Text="256" Width="40"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0 2 0 0">
-                        <Button Height="20" Width="20" Click="Button_ShowCreatePalModeTip_Click">
-                            <Button.Content>
-                                <TextBlock Text="?" Margin="-2"/>
-                            </Button.Content>
-                        </Button>
-                        <ComboBox x:Name="ComboBox_CreatePalMode" Width="150" Margin="5 0 0 0"/>
-                    </StackPanel>
-                    <Button x:Name="Button_CreatePal" Content="生成色盘" FontSize="20" Height="30" Width="90" Click="Button_CreatePal_Click" Margin="0 5 0 0" HorizontalAlignment="Right"/>
-                </StackPanel>
-            </StackPanel>
-        </GroupBox>
         
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 20 10">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 20 7">
             <TextBlock Text="操作进度:" FontSize="16" Margin="0 0 0 0"/>
             <TextBlock x:Name="TextBlock_Progress" FontSize="16" d:Text="0 / 0" Text="{Binding ProgressUi, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Width="100" Margin="10 0 0 0"/>
         </StackPanel>
@@ -347,17 +359,38 @@
             <TextBlock Text="←操作列表 | 叠加列表→" FontSize="20" HorizontalAlignment="Center"/>
             <TextBlock Text="当前仅支持PNG格式" FontSize="17" HorizontalAlignment="Center" Margin="0 10 0 0"/>
             <TextBlock Text="双击列表项可显示和调整图片" FontSize="18" HorizontalAlignment="Center" Margin="0 10 0 0"/>
-            <TextBlock Text="选中按Del键移除图片(保留空位)" FontSize="15" Margin="0 20 0 0" HorizontalAlignment="Center"/>
-            <TextBlock Text="选中按Ctrl+Del键移除图片(下方上移)" FontSize="15" Margin="0 5 0 0" HorizontalAlignment="Center"/>
+            <TextBlock Text="选中按Del键移除图片(保留空位)" Margin="0 20 0 0" HorizontalAlignment="Center"/>
+            <TextBlock Text="选中按Ctrl+Del键移除图片(下方上移)" Margin="0 5 0 0" HorizontalAlignment="Center"/>
         </StackPanel>
 
-        <GroupBox Header="art透明度(Translucency)仅预览" Margin="820 530 0 0" Height="46" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <StackPanel Orientation="Horizontal" Margin="0 5 0 0">
-                <RadioButton x:Name="RadioButton_ArtTranslucency_none" Content="无" Margin="10 0 0 0" IsChecked="True" Checked="RadioButton_ArtTranslucencyChanged" Unchecked="RadioButton_ArtTranslucencyChanged"/>
-                <RadioButton x:Name="RadioButton_ArtTranslucency_25" Content="25" Margin="15 0 0 0" Checked="RadioButton_ArtTranslucencyChanged" Unchecked="RadioButton_ArtTranslucencyChanged"/>
-                <RadioButton x:Name="RadioButton_ArtTranslucency_50" Content="50" Margin="15 0 0 0" Checked="RadioButton_ArtTranslucencyChanged" Unchecked="RadioButton_ArtTranslucencyChanged"/>
-                <RadioButton x:Name="RadioButton_ArtTranslucency_75" Content="75" Margin="15 0 0 0" Checked="RadioButton_ArtTranslucencyChanged" Unchecked="RadioButton_ArtTranslucencyChanged"/>
+        <GroupBox Header="art透明度(Translucency)" Margin="780 480 0 0" Height="44" VerticalAlignment="Top" HorizontalAlignment="Left" MouseEnter="ArtTranslucency_MouseEnter" MouseLeave="ArtTranslucency_MouseLeave">
+            <StackPanel Orientation="Horizontal" Margin="0 2 0 0">
+                <RadioButton x:Name="RadioButton_ArtTranslucency_none" Content="无" Margin="5 0 0 0" IsChecked="True" Checked="RadioButton_ArtTranslucencyChanged" Unchecked="RadioButton_ArtTranslucencyChanged"/>
+                <RadioButton x:Name="RadioButton_ArtTranslucency_25" Content="25" Margin="10 0 0 0" Checked="RadioButton_ArtTranslucencyChanged" Unchecked="RadioButton_ArtTranslucencyChanged"/>
+                <RadioButton x:Name="RadioButton_ArtTranslucency_50" Content="50" Margin="10 0 0 0" Checked="RadioButton_ArtTranslucencyChanged" Unchecked="RadioButton_ArtTranslucencyChanged"/>
+                <RadioButton x:Name="RadioButton_ArtTranslucency_75" Content="75" Margin="10 0 0 0" Checked="RadioButton_ArtTranslucencyChanged" Unchecked="RadioButton_ArtTranslucencyChanged"/>
             </StackPanel>
         </GroupBox>
+
+        <Border x:Name="Border_PaletteTip" BorderBrush="Black" BorderThickness="1" Background="LightYellow" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="740 535 0 0" d:Visibility="Collapsed" Visibility="Collapsed">
+            <TextBlock Text="单位和建筑16-31号为玩家所属色，240-255号色不随光照变化，不使用240-255号色填写(240)" TextWrapping="Wrap" Width="230" Height="60"/>
+        </Border>
+
+        <Border x:Name="Border_ArtTranslucencyTip" BorderBrush="Black" BorderThickness="1" Background="LightYellow" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="750 530 0 0" d:Visibility="Collapsed" Visibility="Collapsed">
+            <TextBlock Text="art.ini/artmd.ini中的透明度数值设置预览，仅预览，不影响导出图片和生成色盘，实际效果需要在art中的Translucency调整" TextWrapping="Wrap" Width="215" Height="80"/>
+        </Border>
+
+        <Border x:Name="Border_CreatePaletteModeTip" BorderBrush="Black" BorderThickness="1" Background="LightYellow" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="540 500 0 0" d:Visibility="Collapsed" Visibility="Collapsed">
+            <StackPanel>
+                <TextBlock FontWeight="Bold" Text="主要颜色 (生成速度慢)："/>
+                <TextBlock Text="根据图片占比最高的颜色生成，会合并难以看出区别的相似颜色"/>
+                <TextBlock Text="如果有极少像素点的突出颜色可能会被忽略"/>
+                <TextBlock FontWeight="Bold" Text="主要颜色补小像素点 (生成速度慢)：" Margin="0 10 0 0"/>
+                <TextBlock Text="根据图片占比最高的颜色生成，会合并难以看出区别的相似颜色"/>
+                <TextBlock Text="会给占比最低的几个颜色替换为极少像素点的突出颜色"/>
+                <TextBlock FontWeight="Bold" Text="OctreeQuantizer (生成速度快)：" Margin="0 10 0 0"/>
+                <TextBlock Text="八叉树颜色量化算法，效果基本等同于Palette Studio生成的色盘"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
